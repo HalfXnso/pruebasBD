@@ -14,7 +14,14 @@ import org.springframework.data.jpa.repository.Query;
  * @author Alfonso
  */
 public interface LocalRepository extends JpaRepository<Vehiculo, Long>{
-@Query("SELECT l FROM Vehiculo WHERE l.matricula = :matricula")    
-Optional<Vehiculo> findCarByNameWithJPQL(String name);
+    
+    //Si quiero realizar consultas complejas
+@Query("SELECT v FROM Vehiculo v WHERE v.matricula = :matricula")    
+Optional<Vehiculo> findCarByNameWithJPQL(String matricula);
+//Ahorrar tiempo con consultas básicas
+Optional<Vehiculo>findBymatricula(String matricula);
+
+//Consulta que le da igual como le mandes el parámtro, busca por coincidencia
+Optional<Vehiculo>findBymatriculaIgnoreCase(String matricula);
 
 }

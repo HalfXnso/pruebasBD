@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.entity.Vehiculo;
+import com.example.demo.errors.LocalNotFoundException;
 import com.example.demo.service.LocalService;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +21,34 @@ public class LocalController {
     @Autowired
     LocalService localService;
 
-    @GetMapping("/findCarByMatricula")
-     Optional<Vehiculo>encuentraCochePorMatricula(@PathVariable String matricula){
+    @GetMapping("/findByMatricula/{matricula}")
+    Optional<Vehiculo> encuentraCoche(@PathVariable String matricula){
+        return localService.findBymatricula(matricula);
+    
+    
+    }
+    
+    @GetMapping("/findCarByMatricula/{matricula}")
+     Optional<Vehiculo> encuentraCochePorMatricula(@PathVariable String matricula){
         return localService.findCarByNameWithJPQL(matricula);
+    }
+      @GetMapping("/findCarById/{id}")
+     Vehiculo encuentraCochePorId(@PathVariable Long id)throws LocalNotFoundException{
+        return localService.findCarById(id);
+    }
+    
+     @GetMapping("/findCarByMatriculaIgnoreCase/{matricula}")
+     Optional<Vehiculo> encuentraCochePorMatriculaIgnoreCase(@PathVariable String matricula){
+        return localService.findBymatriculaIgnoreCase(matricula);
     }
     @GetMapping("/findCars")
     public List<Vehiculo> searchCars() {
         return localService.findAllVehicles();
     }
+   
+    
     @PostMapping("/createCar")
-    public Vehiculo saveCar(@RequestBody Vehiculo vehiculo){
+    public Vehiculo saveCar(@Valid @RequestBody Vehiculo vehiculo){
         return localService.saveCars(vehiculo);
     }
     @PutMapping("/updateCar/{id}")
@@ -39,5 +59,6 @@ public class LocalController {
 public String deleteLocal(@PathVariable Long id){
     localService.deleteCar(id);
     return "Vehiculo borrado";
+    
 }
 }

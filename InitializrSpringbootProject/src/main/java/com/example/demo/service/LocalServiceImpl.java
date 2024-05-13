@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Vehiculo;
+import com.example.demo.errors.LocalNotFoundException;
 import com.example.demo.repository.LocalRepository;
 import java.util.List;
 import java.util.Objects;
@@ -13,6 +14,8 @@ public class LocalServiceImpl implements LocalService{
 
     @Autowired
     LocalRepository localRepository;
+    
+    
     @Override
     public List<Vehiculo> findAllVehicles() {
         return localRepository.findAll();
@@ -50,8 +53,28 @@ public class LocalServiceImpl implements LocalService{
     }
 
     @Override
-    public Optional<Vehiculo> findCarByNameWithJPQL(String matricula) {
+    public Optional<Vehiculo>findCarByNameWithJPQL(String matricula) {
         return localRepository.findCarByNameWithJPQL(matricula);
     }
 
+    @Override
+    public Optional<Vehiculo> findBymatricula(String matricula) {
+        return localRepository.findBymatricula(matricula);
+    }
+
+    @Override
+    public Optional<Vehiculo> findBymatriculaIgnoreCase(String matricula) {
+        return localRepository.findBymatriculaIgnoreCase(matricula);
+    }
+
+    @Override
+    public Vehiculo findCarById(Long id) throws LocalNotFoundException{
+        Optional<Vehiculo> vehiculo = localRepository.findById(id);
+        if(!vehiculo.isPresent()){
+            throw new LocalNotFoundException("Vehiculo is not available");
+        
+        }
+        return vehiculo.get();
+    }
+    
 }
